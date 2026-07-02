@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paleta Studio — Cores, Paletas e Gradientes para Elementor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F6FB;
+    --surface: #FFFFFF;
+    --surface-2: #EEF0F7;
+    --ink: #1E2233;
+    --ink-soft: #6B7280;
+    --border: #E4E7F0;
+
+    --verde: #34D399;
+    --azul: #38BDF8;
+    --laranja: #FB923C;
+    --lilas: #A78BFA;
+    --rosa: #F472B6;
+
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-soft: 0 4px 20px rgba(30, 34, 51, 0.06);
+    --shadow-lift: 0 12px 30px rgba(30, 34, 51, 0.10);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; }
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3{ font-family: 'Poppins', 'Inter', sans-serif; margin: 0; }
+
+  .eyebrow{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  button{ font-family: inherit; cursor: pointer; }
+  input, select{ font-family: inherit; }
+
+  /* ---------- layout shell ---------- */
+  .app{
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  .topbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 6px 4px 22px;
+  }
+
+  .brand{ display: flex; align-items: center; gap: 12px; }
+  .brand-mark{
+    width: 40px; height: 40px; border-radius: 12px;
+    background: conic-gradient(from 200deg, var(--verde), var(--azul), var(--lilas), var(--rosa), var(--laranja), var(--verde));
+    box-shadow: var(--shadow-soft);
+    flex-shrink: 0;
+  }
+  .brand h1{ font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .brand h1 span{ color: var(--azul); }
+  .brand p{ margin: 2px 0 0; font-size: 12.5px; color: var(--ink-soft); }
+
+  .tabs{
+    display: flex;
+    gap: 6px;
+    background: var(--surface);
+    padding: 6px;
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+    overflow-x: auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab{
+    border: none;
+    background: transparent;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    transition: background .18s ease, color .18s ease;
+  }
+  .tab[data-tab="cor"].active{ background: var(--verde); color: #063d2a; }
+  .tab[data-tab="gradiente"].active{ background: var(--lilas); color: #2c1a63; }
+  .tab[data-tab="imagem"].active{ background: var(--rosa); color: #5c0f36; }
+  .tab[data-tab="paletas"].active{ background: var(--laranja); color: #5c2600; }
+  .tab:not(.active):hover{ color: var(--ink); background: var(--surface-2); }
+
+  .layout{
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .panel{
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 26px;
+  }
+
+  .output{ position: sticky; top: 20px; }
+
+  .tabpanel{ display: none; }
+  .tabpanel.active{ display: block; }
+
+  .section-title{ font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .section-sub{ font-size: 13px; color: var(--ink-soft); margin: 0 0 22px; line-height: 1.5; }
+
+  /* ---------- color tab ---------- */
+  .picker-row{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  input[type="color"]{
+    -webkit-appearance: none;
+    width: 56px; height: 56px;
+    border: none; border-radius: 14px;
+    padding: 0; background: none;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper{ padding: 0; border-radius: 14px; }
+  input[type="color"]::-webkit-color-swatch{ border: none; border-radius: 14px; }
+
+  .hex-field{
+    display: flex;
+    align-items: center;
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    flex: 1;
+    min-width: 160px;
+  }
+  .hex-field span{ color: var(--ink-soft); font-weight: 600; }
+  .hex-field input{
+    border: none; background: transparent; outline: none;
+    padding: 12px 4px; font-size: 15px; font-weight: 600;
+    color: var(--ink); width: 100%; letter-spacing: 0.02em;
+  }
+
+  .slider-group{ margin-bottom: 18px; }
+  .slider-label{
+    display: flex; justify-content: space-between;
+    font-size: 13px; font-weight: 600; margin-bottom: 8px;
+  }
+  .slider-label .val{ color: var(--ink-soft); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  input[type="range"]{
+    width: 100%; height: 6px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    outline: none;
+    -webkit-appearance: none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--ink);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--surface); border: 3px solid var(--ink); cursor: pointer;
+  }
+  .r-slider{ accent-color: var(--verde); }
+  .r-slider::-webkit-slider-thumb{ border-color: var(--verde); }
+  .g-slider{ accent-color: var(--azul); }
+  .g-slider::-webkit-slider-thumb{ border-color: var(--azul); }
+  .b-slider{ accent-color: var(--lilas); }
+  .b-slider::-webkit-slider-thumb{ border-color: var(--lilas); }
+  .a-slider{ accent-color: var(--rosa); }
+  .a-slider::-webkit-slider-thumb{ border-color: var(--rosa); }
+  .h-slider{ accent-color: var(--laranja); }
+  .h-slider::-webkit-slider-thumb{ border-color: var(--laranja); }
+
+  .divider{ height: 1px; background: var(--border); margin: 22px 0; border: none; }
+
+  .btn-primary, .btn-secondary, .btn-ghost{
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 12px 20px;
+    border: none;
+    transition: transform .12s ease, opacity .12s ease, background .15s ease;
+  }
+  .btn-primary{ background: var(--ink); color: #fff; }
+  .btn-primary:hover{ opacity: .88; }
+  .btn-secondary{ background: var(--surface-2); color: var(--ink); border: 1px solid var(--border); }
+  .btn-secondary:hover{ background: #E4E7F2; }
+  .btn-ghost{ background: transparent; color: var(--ink-soft); }
+  .btn-ghost:hover{ color: var(--ink); }
+  .btn-primary:active, .btn-secondary:active{ transform: scale(0.97); }
+
+  /* ---------- output panel ---------- */
+  .output-title{ font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+  .preview-box{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 18px;
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+  .preview-checker{
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, #d8dbe3 25%, transparent 25%),
+      linear-gradient(-45deg, #d8dbe3 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #d8dbe3 75%),
+      linear-gradient(-45deg, transparent 75%, #d8dbe3 75%);
+    background-size: 18px 18px;
+    background-position: 0 0, 0 9px, 9px -9px, -9px 0px;
+    background-color: #f2f3f8;
+  }
+  .preview-color{ position: absolute; inset: 0; }
+
+  .value-grid{ display: flex; flex-direction: column; gap: 8px; }
+  .value-row{
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .value-row .label{ font-size: 11px; font-weight: 700; color: var(--ink-soft); font-family: 'Montserrat', sans-serif; letter-spacing: .05em; min-width: 78px; }
+  .value-row .val-text{ font-size: 13.5px; font-weight: 600; flex: 1; word-break: break-all; }
+  .value-copy{
+    border: none; background: var(--surface); border-radius: 8px;
+    padding: 6px 12px; font-size: 12px; font-weight: 700; color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.06); flex-shrink: 0;
+  }
+  .value-copy:hover{ background: #fff; box-shadow: var(--shadow-soft); }
+
+  .code-block{ background: #1B1E2B; border-radius: var(--radius-md); overflow: hidden; }
+  .code-header{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .code-header span{ color: #9aa0b4; font-size: 12px; font-weight: 700; font-family: 'Montserrat', sans-serif; }
+  .btn-copy{
+    background: rgba(255,255,255,.08); color: #fff; border: none;
+    border-radius: 999px; padding: 6px 14px; font-size: 12px; font-weight: 700;
+  }
+  .btn-copy:hover{ background: rgba(255,255,255,.16); }
+  pre#gradientCodeText{
+    margin: 0; padding: 16px; color: #E4E7F2; font-size: 12.5px;
+    line-height: 1.6; overflow-x: auto; font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+
+  .output-hint{ font-size: 12px; color: var(--ink-soft); margin: 16px 2px 0; line-height: 1.5; }
+
+  /* ---------- palette add ---------- */
+  .add-actions{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+
+  /* ---------- palettes tab ---------- */
+  .new-palette-row{
+    display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .new-palette-row input{
+    flex: 1; min-width: 180px;
+    border: 1px solid var(--border); background: var(--surface-2);
+    border-radius: var(--radius-sm); padding: 12px 14px; font-size: 14px; outline: none;
+  }
+  .new-palette-row input:focus{ border-color: var(--azul); }
+
+  .palettes-list{ display: flex; flex-direction: column; gap: 18px; }
+  .palette-card{
+    border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px;
+  }
+  .palette-card-head{ display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .palette-name-input{
+    flex: 1; border: none; background: transparent; font-family: 'Poppins', sans-serif;
+    font-weight: 600; font-size: 15.5px; outline: none; padding: 4px 6px; border-radius: 6px;
+  }
+  .palette-name-input:focus{ background: var(--surface-2); }
+  .btn-icon{
+    border: none; background: var(--surface-2); border-radius: 8px;
+    width: 32px; height: 32px; font-size: 14px; color: var(--ink-soft); flex-shrink: 0;
+  }
+  .btn-icon:hover{ background: #F3D4DD; color: #B3253F; }
+
+  /* grade compacta somente-leitura, usada para cores extraídas de imagens */
+  .swatch-grid, .extracted-grid{
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px; margin-bottom: 14px;
+  }
+  .swatch{
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    overflow: hidden; position: relative; background: var(--surface);
+  }
+  .swatch-color{ height: 52px; background: var(--sc); position: relative; }
+  .swatch-color::before{
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, #d8dbe3 25%, transparent 25%),
+      linear-gradient(-45deg, #d8dbe3 25%, transparent 25%);
+    background-size: 10px 10px; background-color: #f2f3f8; z-index: -1;
+  }
+  .swatch-info{ padding: 7px 9px; }
+  .swatch-name{ display: block; font-size: 12px; font-weight: 700; }
+  .swatch-hex{ display: block; font-size: 10.5px; color: var(--ink-soft); margin-top: 1px; }
+  .swatch-remove{
+    position: absolute; top: 5px; right: 5px; width: 20px; height: 20px;
+    border-radius: 50%; border: none; background: rgba(0,0,0,.45); color: #fff;
+    font-size: 12px; line-height: 1; opacity: 0; transition: opacity .15s ease;
+  }
+  .swatch:hover .swatch-remove{ opacity: 1; }
+  .empty-hint{ font-size: 12.5px; color: var(--ink-soft); grid-column: 1 / -1; padding: 10px 2px; }
+
+  /* linha de cor totalmente editável dentro do cartão de paleta */
+  .pcolor-list{ display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .pcolor-row{
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px;
+  }
+  .pcolor-input{ width: 44px; height: 44px; border-radius: 10px; box-shadow: var(--shadow-soft); flex-shrink: 0; }
+  .pcolor-fields{ display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 130px; }
+  .pcolor-name, .pcolor-hex{
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 6px; padding: 6px 8px; font-size: 12.5px; width: 100%; outline: none;
+  }
+  .pcolor-name{ font-weight: 700; }
+  .pcolor-name:focus, .pcolor-hex:focus{ border-color: var(--azul); }
+  .pcolor-hex{ color: var(--ink-soft); font-family: 'SFMono-Regular', Consolas, monospace; letter-spacing: .02em; }
+  .pcolor-strip{
+    position: relative; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 2px;
+    background-image: linear-gradient(45deg, #d8dbe3 25%, transparent 25%), linear-gradient(-45deg, #d8dbe3 25%, transparent 25%);
+    background-size: 8px 8px; background-color: #f2f3f8;
+  }
+  .pcolor-strip-fill{ position: absolute; inset: 0; }
+  .pcolor-alpha{ display: flex; flex-direction: column; align-items: center; gap: 2px; width: 54px; flex-shrink: 0; }
+  .pcolor-alpha input{
+    width: 100%; border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px; font-size: 11px; text-align: center; outline: none;
+  }
+  .pcolor-alpha span{ font-size: 8.5px; color: var(--ink-soft); font-family: 'Montserrat', sans-serif; letter-spacing: .05em; text-transform: uppercase; }
+  .pcolor-remove{
+    width: 32px; height: 32px; border-radius: 8px; border: none;
+    background: var(--surface); color: var(--ink-soft); font-size: 16px; flex-shrink: 0;
+  }
+  .pcolor-remove:hover{ background: #F3D4DD; color: #B3253F; }
+
+  .add-swatch-row{
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    border: 1px dashed var(--border); border-radius: var(--radius-sm);
+    padding: 10px; margin-bottom: 14px;
+  }
+  .add-swatch-row input[type="color"]{ width: 40px; height: 40px; border-radius: 9px; box-shadow: none; flex-shrink: 0; }
+  .add-swatch-row input[type="text"]{
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 6px; padding: 9px 10px; font-size: 12.5px; outline: none; flex: 1; min-width: 100px;
+  }
+  .add-swatch-row input[type="text"]:focus{ border-color: var(--azul); }
+  .add-swatch-row .new-swatch-hex{ max-width: 90px; font-family: 'SFMono-Regular', Consolas, monospace; }
+
+  /* menu de exportação */
+  .palette-actions{ display: flex; gap: 10px; flex-wrap: wrap; }
+  .export-menu-wrap{ position: relative; }
+  .export-menu{
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 20;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lift); padding: 6px; min-width: 200px;
+    display: none; flex-direction: column;
+  }
+  .export-menu.open{ display: flex; }
+  .export-menu button{
+    border: none; background: transparent; text-align: left; padding: 9px 10px;
+    border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--ink);
+  }
+  .export-menu button:hover{ background: var(--surface-2); }
+
+  /* ---------- aba imagem ---------- */
+  .image-drop{
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    border: 2px dashed var(--border); border-radius: var(--radius-md);
+    padding: 36px 20px; cursor: pointer; margin-bottom: 18px;
+    color: var(--ink-soft); font-size: 13.5px; font-weight: 600;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .image-drop:hover, .image-drop.dragover{ border-color: var(--rosa); background: var(--surface-2); }
+  #imagePreviewWrap{ margin-bottom: 18px; }
+  #imagePreviewWrap img{
+    width: 100%; max-height: 220px; object-fit: cover;
+    border-radius: var(--radius-md); box-shadow: var(--shadow-soft); display: block;
+  }
+
+  /* ---------- gradient tab ---------- */
+  .type-toggle{ display: flex; gap: 8px; margin-bottom: 20px; }
+  .type-btn{
+    flex: 1; border: 1px solid var(--border); background: var(--surface-2);
+    border-radius: var(--radius-sm); padding: 12px; font-weight: 600; font-size: 13.5px; color: var(--ink-soft);
+  }
+  .type-btn.active{ background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .radial-row{ display: flex; gap: 10px; margin-bottom: 18px; }
+  .radial-row select{
+    flex: 1; border: 1px solid var(--border); background: var(--surface-2);
+    border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13.5px; outline: none;
+  }
+
+  .stops-wrap{ display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .stop-row{
+    display: grid; grid-template-columns: 40px 60px 1fr 42px 32px;
+    align-items: center; gap: 10px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px;
+  }
+  .stop-row input[type="color"]{ width: 32px; height: 32px; border-radius: 8px; box-shadow: none; }
+  .stop-alpha-wrap{ display: flex; align-items: center; gap: 2px; font-size: 11px; color: var(--ink-soft); }
+  .stop-alpha{ width: 40px; border: 1px solid var(--border); border-radius: 6px; padding: 5px; font-size: 12px; text-align: center; }
+  .stop-pos{ accent-color: var(--rosa); }
+  .stop-pos-val{ font-size: 11.5px; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .stop-remove{
+    border: none; background: transparent; color: var(--ink-soft); font-size: 18px; border-radius: 6px;
+  }
+  .stop-remove:hover{ color: #B3253F; background: #F3D4DD; }
+
+  .class-field{
+    display: flex; align-items: center; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 0 12px; margin-bottom: 18px;
+  }
+  .class-field span{ color: var(--ink-soft); font-weight: 700; }
+  .class-field input{ border: none; background: transparent; outline: none; padding: 12px 4px; font-size: 14px; font-weight: 600; width: 100%; }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position: fixed; inset: 0; background: rgba(20, 22, 33, 0.45);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .modal-overlay.open{ display: flex; }
+  .modal{
+    background: var(--surface); border-radius: var(--radius-lg); padding: 26px;
+    width: 100%; max-width: 380px; box-shadow: var(--shadow-lift);
+  }
+  .modal h3{ font-size: 17px; margin-bottom: 18px; }
+  .modal label{ display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+  .modal input, .modal select{
+    width: 100%; border: 1px solid var(--border); background: var(--surface-2);
+    border-radius: var(--radius-sm); padding: 11px 12px; font-size: 14px; outline: none; margin-bottom: 16px;
+  }
+  .modal input:focus, .modal select:focus{ border-color: var(--azul); }
+  .modal-actions{ display: flex; justify-content: flex-end; gap: 10px; }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: #fff; padding: 12px 22px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease; z-index: 100;
+    box-shadow: var(--shadow-lift);
+  }
+  .toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 860px){
+    .layout{ grid-template-columns: 1fr; }
+    .output{ position: static; order: -1; }
+    .stop-row{ grid-template-columns: 36px 52px 1fr 36px 28px; }
+  }
+  @media (max-width: 480px){
+    .panel{ padding: 20px 16px; }
+    .brand h1{ font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <h1>Paleta<span>Studio</span></h1>
+        <p>Cores, gradientes e paletas prontos para colar no Elementor</p>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="cor">Cor &amp; Opacidade</button>
+      <button class="tab" data-tab="gradiente">Gradiente</button>
+      <button class="tab" data-tab="imagem">Extrair de Imagem</button>
+      <button class="tab" data-tab="paletas">Paletas</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+
+    <!-- ===================== CONTROLS PANEL ===================== -->
+    <section class="panel controls">
+
+      <!-- ---------- TAB: COR ---------- -->
+      <div class="tabpanel active" id="tab-cor">
+        <p class="eyebrow">Seletor de cor</p>
+        <h2 class="section-title">Escolha uma cor e ajuste a transparência</h2>
+        <p class="section-sub">Use o seletor visual, digite um HEX ou mexa nos controles de RGB, matiz e opacidade. Tudo é convertido automaticamente para o código CSS certo.</p>
+
+        <div class="picker-row">
+          <input type="color" id="nativeColor" value="#38BDF8">
+          <div class="hex-field">
+            <span>#</span>
+            <input type="text" id="hexInput" maxlength="7" value="#38BDF8" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Vermelho (R)</span><span class="val" id="valR">56</span></div>
+          <input type="range" class="r-slider" id="rSlider" min="0" max="255" value="56">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Verde (G)</span><span class="val" id="valG">189</span></div>
+          <input type="range" class="g-slider" id="gSlider" min="0" max="255" value="189">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Azul (B)</span><span class="val" id="valB">248</span></div>
+          <input type="range" class="b-slider" id="bSlider" min="0" max="255" value="248">
+        </div>
+
+        <hr class="divider">
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Matiz (H)</span><span class="val" id="valH">198°</span></div>
+          <input type="range" class="h-slider" id="hSlider" min="0" max="360" value="198">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Saturação (S)</span><span class="val" id="valS">92%</span></div>
+          <input type="range" id="sSlider" min="0" max="100" value="92">
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>Luminosidade (L)</span><span class="val" id="valL">60%</span></div>
+          <input type="range" id="lSlider" min="0" max="100" value="60">
+        </div>
+
+        <hr class="divider">
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Opacidade / Transparência</span><span class="val" id="valA">100%</span></div>
+          <input type="range" class="a-slider" id="aSlider" min="0" max="100" value="100">
+        </div>
+
+        <div class="add-actions">
+          <button class="btn-primary" id="openAddSwatch">+ Adicionar à paleta</button>
+        </div>
+      </div>
+
+      <!-- ---------- TAB: GRADIENTE ---------- -->
+      <div class="tabpanel" id="tab-gradiente">
+        <p class="eyebrow">Construtor de gradiente</p>
+        <h2 class="section-title">Monte um gradiente e exporte a classe CSS</h2>
+        <p class="section-sub">Escolha o tipo, ajuste as cores e posições de cada parada, defina o nome da classe e cole direto no CSS personalizado do Elementor.</p>
+
+        <div class="type-toggle">
+          <button class="type-btn active" data-gtype="linear">Linear</button>
+          <button class="type-btn" data-gtype="radial">Radial</button>
+        </div>
+
+        <div class="slider-group" id="angleWrap">
+          <div class="slider-label"><span>Ângulo</span><span class="val" id="valAngle">135°</span></div>
+          <input type="range" id="angleSlider" min="0" max="360" value="135">
+        </div>
+
+        <div class="radial-row" id="radialWrap" style="display:none">
+          <select id="radialShape">
+            <option value="circle">Círculo</option>
+            <option value="ellipse" selected>Elipse</option>
+          </select>
+          <select id="radialPos">
+            <option value="center" selected>Centro</option>
+            <option value="top">Topo</option>
+            <option value="bottom">Base</option>
+            <option value="left">Esquerda</option>
+            <option value="right">Direita</option>
+          </select>
+        </div>
+
+        <p class="eyebrow" style="margin-bottom:10px;">Paradas de cor</p>
+        <div class="stops-wrap" id="stopsWrap"></div>
+        <button class="btn-secondary" id="addStopBtn" style="margin-bottom:22px;">+ Adicionar parada</button>
+
+        <hr class="divider">
+
+        <p class="eyebrow" style="margin-bottom:10px;">Classe CSS</p>
+        <div class="class-field">
+          <span>.</span>
+          <input type="text" id="classNameInput" value="meu-gradiente" spellcheck="false">
+        </div>
+      </div>
+
+      <!-- ---------- TAB: IMAGEM ---------- -->
+      <div class="tabpanel" id="tab-imagem">
+        <p class="eyebrow">Extrair paleta de imagem</p>
+        <h2 class="section-title">Envie uma imagem e gere uma paleta automaticamente</h2>
+        <p class="section-sub">Escolha uma foto, print ou referência visual. A ferramenta identifica as cores mais presentes e monta uma paleta pronta.</p>
+
+        <label class="image-drop" id="imageDrop">
+          <input type="file" id="imageInput" accept="image/*" hidden>
+          <span id="imageDropText">Clique para escolher uma imagem, ou arraste e solte aqui</span>
+        </label>
+
+        <div id="imagePreviewWrap" style="display:none">
+          <img id="imagePreview" alt="Prévia da imagem enviada">
+        </div>
+
+        <div id="extractedWrap" style="display:none">
+          <p class="eyebrow" style="margin-bottom:10px;">Cores encontradas</p>
+          <div class="extracted-grid" id="extractedGrid"></div>
+          <div class="add-swatch-row">
+            <input type="text" id="extractedPaletteName" value="Paleta da imagem" placeholder="Nome da nova paleta">
+            <button class="btn-primary" id="createFromImageBtn">Criar paleta com essas cores</button>
+          </div>
+          <p class="output-hint" style="margin:0;">Ou clique no + de uma cor para adicionar a uma paleta existente.</p>
+        </div>
+      </div>
+
+      <!-- ---------- TAB: PALETAS ---------- -->
+      <div class="tabpanel" id="tab-paletas">
+        <p class="eyebrow">Minhas paletas</p>
+        <h2 class="section-title">Organize suas cores por nome</h2>
+        <p class="section-sub">Crie paletas para cada cliente ou projeto, salve cores com nomes fáceis de lembrar e exporte tudo como variáveis CSS.</p>
+
+        <div class="new-palette-row">
+          <input type="text" id="newPaletteInput" placeholder="Nome da nova paleta, ex: Cliente Studio Bela">
+          <button class="btn-primary" id="createPaletteBtn">Criar paleta</button>
+        </div>
+
+        <div class="palettes-list" id="palettesContainer"></div>
+      </div>
+
+    </section>
+
+    <!-- ===================== OUTPUT PANEL ===================== -->
+    <aside class="panel output">
+      <h2 class="output-title" id="outputTitle">Pré-visualização</h2>
+
+      <div class="preview-box" id="previewBox">
+        <div class="preview-checker"></div>
+        <div class="preview-color" id="previewColor"></div>
+      </div>
+
+      <div class="value-grid" id="colorValues"></div>
+
+      <div class="code-block" id="gradientCode" style="display:none">
+        <div class="code-header">
+          <span id="codeClassLabel">.meu-gradiente</span>
+          <button class="btn-copy" id="copyGradientCode">Copiar CSS</button>
+        </div>
+        <pre id="gradientCodeText"></pre>
+      </div>
+
+      <p class="output-hint" id="outputHint"></p>
+    </aside>
+
+  </main>
+</div>
+
+<!-- ===================== MODAL: ADD TO PALETTE ===================== -->
+<div class="modal-overlay" id="addSwatchModal">
+  <div class="modal">
+    <h3>Adicionar cor à paleta</h3>
+    <label for="swatchNameInput">Nome da cor</label>
+    <input type="text" id="swatchNameInput" placeholder="Ex: Verde Menta">
+    <label for="paletteSelect">Paleta de destino</label>
+    <select id="paletteSelect"></select>
+    <div id="newPaletteNameWrap" style="display:none">
+      <label for="newPaletteNameInput">Nome da nova paleta</label>
+      <input type="text" id="newPaletteNameInput" placeholder="Ex: Paleta do Cliente X">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelAddSwatch">Cancelar</button>
+      <button class="btn-primary" id="confirmAddSwatch">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     UTIL — conversões de cor
+  ============================================================ */
+  function clamp(v, min, max){ return Math.min(max, Math.max(min, v)); }
+  function round2(n){ return Math.round(n * 100) / 100; }
+
+  function componentToHex(c){
+    const h = clamp(Math.round(c), 0, 255).toString(16);
+    return h.length === 1 ? '0' + h : h;
+  }
+  function rgbToHex(r, g, b){
+    return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  }
+  function hexToRgb(hex){
+    hex = hex.replace('#', '').trim();
+    if(hex.length === 3){ hex = hex.split('').map(c => c + c).join(''); }
+    if(!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
+    return {
+      r: parseInt(hex.substring(0, 2), 16),
+      g: parseInt(hex.substring(2, 4), 16),
+      b: parseInt(hex.substring(4, 6), 16)
+    };
+  }
+  function rgbToHsl(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+    if(max === min){ h = s = 0; }
+    else{
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
+      }
+      h /= 6;
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+  function hue2rgb(p, q, t){
+    if(t < 0) t += 1;
+    if(t > 1) t -= 1;
+    if(t < 1/6) return p + (q - p) * 6 * t;
+    if(t < 1/2) return q;
+    if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  }
+  function hslToRgb(h, s, l){
+    h /= 360; s /= 100; l /= 100;
+    let r, g, b;
+    if(s === 0){ r = g = b = l; }
+    else{
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+  }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function slugify(str){
+    return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'cor';
+  }
+  function uid(){ return Math.random().toString(36).slice(2, 10); }
+
+  /* ============================================================
+     TOAST
+  ============================================================ */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+  }
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(() => toast('Copiado!')).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+  function fallbackCopy(text){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('Copiado!'); } catch(e){ toast('Não foi possível copiar'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ============================================================
+     ESTADO DA COR ATUAL
+  ============================================================ */
+  const state = { r: 56, g: 189, b: 248, a: 1 };
+
+  function syncFromRgb(){
+    const hex = rgbToHex(state.r, state.g, state.b);
+    const hsl = rgbToHsl(state.r, state.g, state.b);
+    document.getElementById('nativeColor').value = hex;
+    document.getElementById('hexInput').value = hex;
+    document.getElementById('rSlider').value = state.r;
+    document.getElementById('gSlider').value = state.g;
+    document.getElementById('bSlider').value = state.b;
+    document.getElementById('hSlider').value = hsl.h;
+    document.getElementById('sSlider').value = hsl.s;
+    document.getElementById('lSlider').value = hsl.l;
+    document.getElementById('valR').textContent = state.r;
+    document.getElementById('valG').textContent = state.g;
+    document.getElementById('valB').textContent = state.b;
+    document.getElementById('valH').textContent = hsl.h + '°';
+    document.getElementById('valS').textContent = hsl.s + '%';
+    document.getElementById('valL').textContent = hsl.l + '%';
+    renderColorOutput();
+  }
+
+  function setFromHex(hex){
+    const rgb = hexToRgb(hex);
+    if(!rgb) return;
+    state.r = rgb.r; state.g = rgb.g; state.b = rgb.b;
+    syncFromRgb();
+  }
+  function setFromRgbInputs(){
+    state.r = +document.getElementById('rSlider').value;
+    state.g = +document.getElementById('gSlider').value;
+    state.b = +document.getElementById('bSlider').value;
+    syncFromRgb();
+  }
+  function setFromHslInputs(){
+    const h = +document.getElementById('hSlider').value;
+    const s = +document.getElementById('sSlider').value;
+    const l = +document.getElementById('lSlider').value;
+    const rgb = hslToRgb(h, s, l);
+    state.r = rgb.r; state.g = rgb.g; state.b = rgb.b;
+    syncFromRgb();
+  }
+  function setAlpha(){
+    state.a = (+document.getElementById('aSlider').value) / 100;
+    document.getElementById('valA').textContent = Math.round(state.a * 100) + '%';
+    renderColorOutput();
+  }
+
+  function renderColorOutput(){
+    const hex = rgbToHex(state.r, state.g, state.b);
+    const hex8 = hex + componentToHex(Math.round(state.a * 255));
+    const rgba = `rgba(${state.r}, ${state.g}, ${state.b}, ${round2(state.a)})`;
+    const hsl = rgbToHsl(state.r, state.g, state.b);
+    const hsla = `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${round2(state.a)})`;
+
+    document.getElementById('previewColor').style.background = rgba;
+
+    const rows = [
+      ['HEX', hex],
+      ['HEX 8', hex8],
+      ['RGBA', rgba],
+      ['HSLA', hsla]
+    ];
+    document.getElementById('colorValues').innerHTML = rows.map(([label, val]) => `
+      <div class="value-row">
+        <span class="label">${label}</span>
+        <span class="val-text">${val}</span>
+        <button class="value-copy" data-value="${escapeHtml(val)}">Copiar</button>
+      </div>`).join('');
+  }
+
+  document.getElementById('nativeColor').addEventListener('input', e => setFromHex(e.target.value));
+  document.getElementById('hexInput').addEventListener('input', e => {
+    let v = e.target.value.trim();
+    if(!v.startsWith('#')) v = '#' + v;
+    if(hexToRgb(v)) setFromHex(v);
+  });
+  ['rSlider','gSlider','bSlider'].forEach(id => document.getElementById(id).addEventListener('input', setFromRgbInputs));
+  ['hSlider','sSlider','lSlider'].forEach(id => document.getElementById(id).addEventListener('input', setFromHslInputs));
+  document.getElementById('aSlider').addEventListener('input', setAlpha);
+
+  document.getElementById('colorValues').addEventListener('click', e => {
+    if(e.target.classList.contains('value-copy')) copyText(e.target.dataset.value);
+  });
+
+  /* ============================================================
+     ARMAZENAMENTO PERSISTENTE (paletas)
+  ============================================================ */
+  const hasStorage = typeof window.storage !== 'undefined' && window.storage;
+  let palettes = [];
+
+  async function loadPalettes(){
+    if(hasStorage){
+      try{
+        const res = await window.storage.get('palettes-data', false);
+        if(res && res.value){ palettes = JSON.parse(res.value); return; }
+      } catch(e){ /* chave ainda não existe */ }
+    }
+    palettes = [{
+      id: uid(),
+      name: 'Paleta inicial',
+      colors: [
+        { id: uid(), name: 'Verde', hex: '#34D399', alpha: 1 },
+        { id: uid(), name: 'Azul céu', hex: '#38BDF8', alpha: 1 },
+        { id: uid(), name: 'Laranja', hex: '#FB923C', alpha: 1 },
+        { id: uid(), name: 'Lilás', hex: '#A78BFA', alpha: 1 },
+        { id: uid(), name: 'Rosa', hex: '#F472B6', alpha: 1 }
+      ]
+    }];
+  }
+  async function savePalettes(){
+    if(!hasStorage) return;
+    try{ await window.storage.set('palettes-data', JSON.stringify(palettes), false); }
+    catch(e){ toast('Não foi possível salvar (armazenamento indisponível)'); }
+  }
+
+  function colorToCss(c){
+    if(c.alpha >= 1) return c.hex;
+    const rgb = hexToRgb(c.hex);
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${round2(c.alpha)})`;
+  }
+
+  let saveTimer = null;
+  function debouncedSave(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { savePalettes(); }, 500);
+  }
+
+  function renderPalettes(){
+    const container = document.getElementById('palettesContainer');
+    if(palettes.length === 0){
+      container.innerHTML = '<p class="empty-hint">Nenhuma paleta ainda. Crie a primeira acima.</p>';
+      return;
+    }
+    container.innerHTML = palettes.map(p => `
+      <div class="palette-card" data-id="${p.id}">
+        <div class="palette-card-head">
+          <input class="palette-name-input" value="${escapeHtml(p.name)}" data-action="rename" data-id="${p.id}">
+          <button class="btn-icon" data-action="delete-palette" data-id="${p.id}" title="Excluir paleta">🗑</button>
+        </div>
+
+        <div class="pcolor-list">
+          ${p.colors.map(c => `
+            <div class="pcolor-row" data-palette="${p.id}" data-swatch="${c.id}">
+              <input type="color" class="pcolor-input" value="${c.hex}" title="Escolher cor">
+              <div class="pcolor-fields">
+                <input type="text" class="pcolor-name" value="${escapeHtml(c.name)}" placeholder="Nome da cor">
+                <input type="text" class="pcolor-hex" value="${c.hex.toUpperCase()}" maxlength="7" spellcheck="false">
+                <div class="pcolor-strip"><div class="pcolor-strip-fill" style="background:${colorToCss(c)}"></div></div>
+              </div>
+              <div class="pcolor-alpha">
+                <input type="number" class="pcolor-alpha-input" min="0" max="100" value="${Math.round(c.alpha*100)}">
+                <span>Opac.</span>
+              </div>
+              <button class="pcolor-remove" data-action="remove-swatch" title="Remover cor">×</button>
+            </div>`).join('') || '<p class="empty-hint">Nenhuma cor ainda. Adicione abaixo ou use "Adicionar à paleta" na aba Cor.</p>'}
+        </div>
+
+        <div class="add-swatch-row">
+          <input type="color" class="new-swatch-color" value="#38BDF8">
+          <input type="text" class="new-swatch-hex" value="#38BDF8" maxlength="7" spellcheck="false" placeholder="#HEX">
+          <input type="text" class="new-swatch-name" placeholder="Nome da nova cor">
+          <button class="btn-secondary" data-action="add-swatch-inline" data-id="${p.id}">+ Adicionar cor</button>
+        </div>
+
+        <div class="palette-actions">
+          <div class="export-menu-wrap">
+            <button class="btn-secondary" data-action="toggle-export" data-id="${p.id}">Exportar ▾</button>
+            <div class="export-menu" data-menu-for="${p.id}">
+              <button data-action="export-css" data-id="${p.id}">Variáveis CSS (copiar)</button>
+              <button data-action="export-scss" data-id="${p.id}">Variáveis SCSS (copiar)</button>
+              <button data-action="export-json" data-id="${p.id}">JSON (.json)</button>
+              <button data-action="export-txt" data-id="${p.id}">Texto (.txt)</button>
+              <button data-action="export-html" data-id="${p.id}">Página HTML (.html)</button>
+              <button data-action="export-png" data-id="${p.id}">Imagem PNG (.png)</button>
+              <button data-action="export-jpg" data-id="${p.id}">Imagem JPG (.jpg)</button>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ---------- edição ao vivo (não reconstrói o DOM, então nunca perde foco) ---------- */
+  document.getElementById('palettesContainer').addEventListener('input', e => {
+    const row = e.target.closest('.pcolor-row');
+    if(row){
+      const p = palettes.find(p => p.id === row.dataset.palette);
+      const c = p && p.colors.find(c => c.id === row.dataset.swatch);
+      if(!c) return;
+
+      if(e.target.classList.contains('pcolor-input')){
+        c.hex = e.target.value;
+        row.querySelector('.pcolor-hex').value = c.hex.toUpperCase();
+      } else if(e.target.classList.contains('pcolor-hex')){
+        let v = e.target.value.trim();
+        if(!v.startsWith('#')) v = '#' + v;
+        if(hexToRgb(v)){ c.hex = v; row.querySelector('.pcolor-input').value = v; }
+      } else if(e.target.classList.contains('pcolor-name')){
+        c.name = e.target.value;
+      } else if(e.target.classList.contains('pcolor-alpha-input')){
+        c.alpha = clamp(+e.target.value || 0, 0, 100) / 100;
+      }
+      row.querySelector('.pcolor-strip-fill').style.background = colorToCss(c);
+      debouncedSave();
+      return;
+    }
+
+    const addRow = e.target.closest('.add-swatch-row');
+    if(addRow && e.target.classList.contains('new-swatch-color')){
+      addRow.querySelector('.new-swatch-hex').value = e.target.value.toUpperCase();
+    }
+    if(addRow && e.target.classList.contains('new-swatch-hex')){
+      let v = e.target.value.trim();
+      if(!v.startsWith('#')) v = '#' + v;
+      if(hexToRgb(v)) addRow.querySelector('.new-swatch-color').value = v;
+    }
+  });
+
+  document.getElementById('palettesContainer').addEventListener('click', async e => {
+    const btn = e.target.closest('[data-action]');
+    if(!btn) return;
+    const action = btn.dataset.action;
+
+    if(action === 'delete-palette'){
+      palettes = palettes.filter(p => p.id !== btn.dataset.id);
+      await savePalettes(); renderPalettes(); refreshPaletteSelect();
+      return;
+    }
+    if(action === 'remove-swatch'){
+      const row = btn.closest('.pcolor-row');
+      const p = palettes.find(p => p.id === row.dataset.palette);
+      if(p) p.colors = p.colors.filter(c => c.id !== row.dataset.swatch);
+      await savePalettes(); renderPalettes();
+      return;
+    }
+    if(action === 'add-swatch-inline'){
+      const row = btn.closest('.add-swatch-row');
+      let hex = row.querySelector('.new-swatch-hex').value.trim();
+      if(!hex.startsWith('#')) hex = '#' + hex;
+      if(!hexToRgb(hex)){ toast('HEX inválido'); return; }
+      const name = row.querySelector('.new-swatch-name').value.trim() || 'Cor sem nome';
+      const p = palettes.find(p => p.id === btn.dataset.id);
+      if(p){ p.colors.push({ id: uid(), name, hex, alpha: 1 }); await savePalettes(); renderPalettes(); }
+      return;
+    }
+    if(action === 'toggle-export'){
+      const menu = document.querySelector(`.export-menu[data-menu-for="${btn.dataset.id}"]`);
+      document.querySelectorAll('.export-menu').forEach(m => { if(m !== menu) m.classList.remove('open'); });
+      if(menu) menu.classList.toggle('open');
+      return;
+    }
+    if(action && action.startsWith('export-')){
+      const p = palettes.find(p => p.id === btn.dataset.id);
+      if(!p) return;
+      runPaletteExport(action, p);
+      document.querySelectorAll('.export-menu').forEach(m => m.classList.remove('open'));
+    }
+  });
+  document.addEventListener('click', e => {
+    if(!e.target.closest('.export-menu-wrap')) document.querySelectorAll('.export-menu').forEach(m => m.classList.remove('open'));
+  });
+
+  document.getElementById('palettesContainer').addEventListener('change', async e => {
+    if(e.target.dataset.action === 'rename'){
+      const p = palettes.find(p => p.id === e.target.dataset.id);
+      if(p){ p.name = e.target.value.trim() || 'Sem nome'; await savePalettes(); refreshPaletteSelect(); }
+    }
+  });
+
+  /* ============================================================
+     EXPORTAÇÃO DE PALETAS (CSS, SCSS, JSON, TXT, HTML, PNG, JPG)
+  ============================================================ */
+  function downloadFile(filename, content, mime){
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  function paletteToCssVars(p){
+    return `:root {\n${p.colors.map(c => `  --${slugify(c.name)}: ${colorToCss(c)};`).join('\n')}\n}`;
+  }
+  function paletteToScss(p){
+    return `// ${p.name}\n` + p.colors.map(c => `$${slugify(c.name)}: ${colorToCss(c)};`).join('\n');
+  }
+  function paletteToJson(p){
+    return JSON.stringify({
+      name: p.name,
+      colors: p.colors.map(c => ({ name: c.name, hex: c.hex.toUpperCase(), alpha: round2(c.alpha), css: colorToCss(c) }))
+    }, null, 2);
+  }
+  function paletteToTxt(p){
+    return `${p.name}\n${'-'.repeat(p.name.length)}\n\n` + p.colors.map(c =>
+      `${c.name}: ${c.hex.toUpperCase()}${c.alpha < 1 ? '  (opacidade ' + Math.round(c.alpha*100) + '%)' : ''}`
+    ).join('\n');
+  }
+  function paletteToHtml(p){
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>${escapeHtml(p.name)}</title>
+<style>
+  body{ font-family: Arial, Helvetica, sans-serif; background:#F5F6FB; margin:0; padding:40px; color:#1E2233; }
+  h1{ margin:0 0 24px; font-size:22px; }
+  .grid{ display:flex; flex-wrap:wrap; gap:18px; }
+  .sw{ width:180px; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,.08); background:#fff; }
+  .sw .c{ height:110px; }
+  .sw .i{ padding:10px 14px; }
+  .sw .n{ font-weight:700; font-size:14px; margin:0 0 2px; }
+  .sw .h{ font-size:12px; color:#6B7280; margin:0; font-family:monospace; }
+</style>
+</head>
+<body>
+  <h1>${escapeHtml(p.name)}</h1>
+  <div class="grid">
+    ${p.colors.map(c => `<div class="sw"><div class="c" style="background:${colorToCss(c)}"></div><div class="i"><p class="n">${escapeHtml(c.name)}</p><p class="h">${c.hex.toUpperCase()}${c.alpha < 1 ? ' · ' + Math.round(c.alpha*100) + '%' : ''}</p></div></div>`).join('\n    ')}
+  </div>
+</body>
+</html>`;
+  }
+  function exportPaletteImage(p, format){
+    if(!p.colors.length){ toast('Esta paleta não tem cores ainda'); return; }
+    const swW = 220, swH = 170;
+    const canvas = document.createElement('canvas');
+    canvas.width = swW * p.colors.length;
+    canvas.height = swH;
+    const ctx = canvas.getContext('2d');
+    p.colors.forEach((c, i) => {
+      const x = i * swW;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x, 0, swW, swH);
+      const rgb = hexToRgb(c.hex);
+      ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${c.alpha})`;
+      ctx.fillRect(x, 0, swW, swH - 50);
+      ctx.fillStyle = '#1E2233';
+      ctx.font = '600 16px Arial, sans-serif';
+      ctx.fillText(c.name, x + 14, swH - 28);
+      ctx.font = '400 13px monospace';
+      ctx.fillStyle = '#6B7280';
+      ctx.fillText(c.hex.toUpperCase() + (c.alpha < 1 ? ' · ' + Math.round(c.alpha*100) + '%' : ''), x + 14, swH - 10);
+    });
+    const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
+    canvas.toBlob(blob => {
+      if(!blob){ toast('Não foi possível gerar a imagem'); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${slugify(p.name)}.${format}`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, mime, 0.92);
+  }
+  function runPaletteExport(action, p){
+    if(!p.colors.length && action !== 'export-css' && action !== 'export-scss'){
+      // ainda permite gerar arquivos vazios, mas avisa
+    }
+    switch(action){
+      case 'export-css': copyText(paletteToCssVars(p)); break;
+      case 'export-scss': copyText(paletteToScss(p)); break;
+      case 'export-json': downloadFile(`${slugify(p.name)}.json`, paletteToJson(p), 'application/json'); toast('JSON baixado!'); break;
+      case 'export-txt': downloadFile(`${slugify(p.name)}.txt`, paletteToTxt(p), 'text/plain'); toast('TXT baixado!'); break;
+      case 'export-html': downloadFile(`${slugify(p.name)}.html`, paletteToHtml(p), 'text/html'); toast('HTML baixado!'); break;
+      case 'export-png': exportPaletteImage(p, 'png'); toast('Imagem PNG baixada!'); break;
+      case 'export-jpg': exportPaletteImage(p, 'jpg'); toast('Imagem JPG baixada!'); break;
+    }
+  }
+
+  document.getElementById('createPaletteBtn').addEventListener('click', async () => {
+    const input = document.getElementById('newPaletteInput');
+    const name = input.value.trim();
+    if(!name){ toast('Digite um nome para a paleta'); return; }
+    palettes.unshift({ id: uid(), name, colors: [] });
+    input.value = '';
+    await savePalettes(); renderPalettes(); refreshPaletteSelect();
+    toast('Paleta criada!');
+  });
+
+  /* ---------- modal: adicionar uma cor (de qualquer origem) a uma paleta ---------- */
+  const addModal = document.getElementById('addSwatchModal');
+  let pendingSwatch = { hex: '#38BDF8', alpha: 1 };
+
+  function refreshPaletteSelect(){
+    const sel = document.getElementById('paletteSelect');
+    const prev = sel.value;
+    sel.innerHTML = palettes.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join('')
+      + '<option value="__new__">+ Nova paleta</option>';
+    if(palettes.some(p => p.id === prev)) sel.value = prev;
+  }
+  function openAddModalForColor(hex, alpha, suggestedName){
+    pendingSwatch = { hex, alpha: alpha == null ? 1 : alpha };
+    refreshPaletteSelect();
+    document.getElementById('swatchNameInput').value = suggestedName || '';
+    document.getElementById('newPaletteNameInput').value = '';
+    document.getElementById('newPaletteNameWrap').style.display = 'none';
+    addModal.classList.add('open');
+    document.getElementById('swatchNameInput').focus();
+  }
+  document.getElementById('openAddSwatch').addEventListener('click', () => {
+    openAddModalForColor(rgbToHex(state.r, state.g, state.b), state.a, '');
+  });
+  document.getElementById('cancelAddSwatch').addEventListener('click', () => addModal.classList.remove('open'));
+  addModal.addEventListener('click', e => { if(e.target === addModal) addModal.classList.remove('open'); });
+  document.getElementById('paletteSelect').addEventListener('change', e => {
+    document.getElementById('newPaletteNameWrap').style.display = e.target.value === '__new__' ? 'block' : 'none';
+  });
+  document.getElementById('confirmAddSwatch').addEventListener('click', async () => {
+    const swatchName = document.getElementById('swatchNameInput').value.trim() || 'Cor sem nome';
+    const sel = document.getElementById('paletteSelect').value;
+    const swatch = { id: uid(), name: swatchName, hex: pendingSwatch.hex, alpha: pendingSwatch.alpha };
+
+    if(sel === '__new__'){
+      const newName = document.getElementById('newPaletteNameInput').value.trim() || 'Nova paleta';
+      palettes.unshift({ id: uid(), name: newName, colors: [swatch] });
+    } else {
+      const p = palettes.find(p => p.id === sel);
+      if(p) p.colors.push(swatch);
+    }
+    await savePalettes(); renderPalettes();
+    addModal.classList.remove('open');
+    toast('Cor adicionada à paleta!');
+  });
+
+  /* ============================================================
+     GRADIENTE
+  ============================================================ */
+  let gType = 'linear';
+  let stops = [
+    { color: '#34D399', alpha: 1, pos: 0 },
+    { color: '#38BDF8', alpha: 1, pos: 100 }
+  ];
+
+  function renderStops(){
+    const wrap = document.getElementById('stopsWrap');
+    wrap.innerHTML = stops.map((s, i) => `
+      <div class="stop-row" data-index="${i}">
+        <input type="color" class="stop-color" value="${s.color}">
+        <div class="stop-alpha-wrap"><input type="number" class="stop-alpha" min="0" max="100" value="${Math.round(s.alpha*100)}">%</div>
+        <input type="range" class="stop-pos" min="0" max="100" value="${s.pos}">
+        <span class="stop-pos-val">${s.pos}%</span>
+        <button class="stop-remove" title="Remover">×</button>
+      </div>`).join('');
+  }
+
+  function stopCss(s){
+    if(s.alpha >= 1) return `${s.color} ${s.pos}%`;
+    const rgb = hexToRgb(s.color);
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${round2(s.alpha)}) ${s.pos}%`;
+  }
+
+  function buildGradientValue(){
+    const stopsStr = stops.slice().sort((a,b) => a.pos - b.pos).map(stopCss).join(', ');
+    if(gType === 'linear'){
+      const angle = document.getElementById('angleSlider').value;
+      return `linear-gradient(${angle}deg, ${stopsStr})`;
+    }
+    const shape = document.getElementById('radialShape').value;
+    const pos = document.getElementById('radialPos').value;
+    return `radial-gradient(${shape} at ${pos}, ${stopsStr})`;
+  }
+
+  function renderGradientOutput(){
+    const value = buildGradientValue();
+    document.getElementById('previewColor').style.background = value;
+    const className = slugify(document.getElementById('classNameInput').value || 'meu-gradiente');
+    document.getElementById('codeClassLabel').textContent = '.' + className;
+    document.getElementById('gradientCodeText').textContent =
+`.${className} {
+  background: ${value};
+}`;
+  }
+
+  document.getElementById('stopsWrap').addEventListener('input', e => {
+    const row = e.target.closest('.stop-row');
+    if(!row) return;
+    const i = +row.dataset.index;
+    if(e.target.classList.contains('stop-color')) stops[i].color = e.target.value;
+    else if(e.target.classList.contains('stop-alpha')) stops[i].alpha = clamp(+e.target.value, 0, 100) / 100;
+    else if(e.target.classList.contains('stop-pos')){
+      stops[i].pos = +e.target.value;
+      row.querySelector('.stop-pos-val').textContent = stops[i].pos + '%';
+    }
+    renderGradientOutput();
+  });
+  document.getElementById('stopsWrap').addEventListener('click', e => {
+    if(!e.target.classList.contains('stop-remove')) return;
+    if(stops.length <= 2){ toast('É preciso ao menos 2 paradas'); return; }
+    const i = +e.target.closest('.stop-row').dataset.index;
+    stops.splice(i, 1);
+    renderStops(); renderGradientOutput();
+  });
+  document.getElementById('addStopBtn').addEventListener('click', () => {
+    if(stops.length >= 6){ toast('Máximo de 6 paradas'); return; }
+    const palette = ['#34D399','#38BDF8','#FB923C','#A78BFA','#F472B6'];
+    stops.push({ color: palette[stops.length % palette.length], alpha: 1, pos: 50 });
+    renderStops(); renderGradientOutput();
+  });
+
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gType = btn.dataset.gtype;
+      document.getElementById('angleWrap').style.display = gType === 'linear' ? 'block' : 'none';
+      document.getElementById('radialWrap').style.display = gType === 'radial' ? 'flex' : 'none';
+      renderGradientOutput();
+    });
+  });
+  document.getElementById('angleSlider').addEventListener('input', e => {
+    document.getElementById('valAngle').textContent = e.target.value + '°';
+    renderGradientOutput();
+  });
+  document.getElementById('radialShape').addEventListener('change', renderGradientOutput);
+  document.getElementById('radialPos').addEventListener('change', renderGradientOutput);
+  document.getElementById('classNameInput').addEventListener('input', renderGradientOutput);
+  document.getElementById('copyGradientCode').addEventListener('click', () => {
+    copyText(document.getElementById('gradientCodeText').textContent);
+  });
+
+  /* ============================================================
+     EXTRAIR CORES DE IMAGEM
+  ============================================================ */
+  let lastImageDataUrl = null;
+  let extractedColors = [];
+
+  function extractColorsFromImage(img, maxColors){
+    const canvas = document.createElement('canvas');
+    const maxDim = 180;
+    const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+    canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    let data;
+    try{ data = ctx.getImageData(0, 0, canvas.width, canvas.height).data; }
+    catch(e){ toast('Não foi possível ler esta imagem'); return []; }
+
+    const step = 24;
+    const buckets = {};
+    for(let i = 0; i < data.length; i += 4){
+      const a = data[i + 3];
+      if(a < 125) continue;
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      const key = Math.round(r / step) + '_' + Math.round(g / step) + '_' + Math.round(b / step);
+      if(!buckets[key]) buckets[key] = { count: 0, r: 0, g: 0, b: 0 };
+      buckets[key].count++; buckets[key].r += r; buckets[key].g += g; buckets[key].b += b;
+    }
+    let arr = Object.values(buckets).map(bkt => ({
+      count: bkt.count, r: Math.round(bkt.r / bkt.count), g: Math.round(bkt.g / bkt.count), b: Math.round(bkt.b / bkt.count)
+    }));
+    arr.sort((a, b) => b.count - a.count);
+
+    const result = [];
+    for(const c of arr){
+      if(result.length >= maxColors) break;
+      const tooClose = result.some(rc => Math.sqrt((rc.r - c.r)**2 + (rc.g - c.g)**2 + (rc.b - c.b)**2) < 36);
+      if(!tooClose) result.push(c);
+    }
+    return result.map(c => rgbToHex(c.r, c.g, c.b));
+  }
+
+  function renderExtractedColors(hexList){
+    const wrap = document.getElementById('extractedWrap');
+    const grid = document.getElementById('extractedGrid');
+    if(!hexList.length){ wrap.style.display = 'none'; toast('Não encontrei cores suficientes nessa imagem'); return; }
+    extractedColors = hexList;
+    wrap.style.display = 'block';
+    grid.innerHTML = hexList.map((hex, i) => `
+      <div class="swatch">
+        <div class="swatch-color" style="--sc:${hex}"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Cor ${i + 1}</span>
+          <span class="swatch-hex">${hex.toUpperCase()}</span>
+        </div>
+        <button class="swatch-remove" data-hex="${hex}" data-idx="${i}" title="Adicionar a uma paleta" style="opacity:1;background:rgba(30,34,51,.55);">+</button>
+      </div>`).join('');
+  }
+
+  function handleImageFile(file){
+    if(!file || !file.type || !file.type.startsWith('image/')){ toast('Selecione um arquivo de imagem'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      lastImageDataUrl = e.target.result;
+      const img = new Image();
+      img.onload = () => {
+        document.getElementById('imagePreview').src = lastImageDataUrl;
+        document.getElementById('imagePreviewWrap').style.display = 'block';
+        renderExtractedColors(extractColorsFromImage(img, 8));
+        if(document.querySelector('.tab[data-tab="imagem"]').classList.contains('active')){
+          document.getElementById('previewColor').style.background = `center / cover no-repeat url("${lastImageDataUrl}")`;
+        }
+      };
+      img.onerror = () => toast('Não foi possível abrir essa imagem');
+      img.src = lastImageDataUrl;
+    };
+    reader.onerror = () => toast('Não foi possível ler o arquivo');
+    reader.readAsDataURL(file);
+  }
+
+  const imageInput = document.getElementById('imageInput');
+  const imageDrop = document.getElementById('imageDrop');
+  imageInput.addEventListener('change', e => handleImageFile(e.target.files[0]));
+  imageDrop.addEventListener('dragover', e => { e.preventDefault(); imageDrop.classList.add('dragover'); });
+  imageDrop.addEventListener('dragleave', () => imageDrop.classList.remove('dragover'));
+  imageDrop.addEventListener('drop', e => {
+    e.preventDefault(); imageDrop.classList.remove('dragover');
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
+  });
+
+  document.getElementById('extractedGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.swatch-remove');
+    if(!btn) return;
+    openAddModalForColor(btn.dataset.hex, 1, 'Cor ' + (Number(btn.dataset.idx) + 1));
+  });
+
+  document.getElementById('createFromImageBtn').addEventListener('click', async () => {
+    if(!extractedColors.length){ toast('Envie uma imagem primeiro'); return; }
+    const name = document.getElementById('extractedPaletteName').value.trim() || 'Paleta da imagem';
+    const colors = extractedColors.map((hex, i) => ({ id: uid(), name: 'Cor ' + (i + 1), hex, alpha: 1 }));
+    palettes.unshift({ id: uid(), name, colors });
+    await savePalettes(); renderPalettes(); refreshPaletteSelect();
+    toast('Paleta criada a partir da imagem!');
+    switchTab('paletas');
+  });
+
+  /* ============================================================
+     ABAS
+  ============================================================ */
+  const outputTitles = {
+    cor: 'Pré-visualização da cor',
+    gradiente: 'Pré-visualização do gradiente',
+    imagem: 'Imagem enviada',
+    paletas: 'Suas cores salvas'
+  };
+  const outputHints = {
+    cor: 'Dica: clique em "Adicionar à paleta" para salvar esta cor com um nome e reaproveitar depois.',
+    gradiente: 'Dica: copie o bloco de CSS e cole no painel de CSS personalizado do Elementor, na seção ou widget desejado.',
+    imagem: 'Dica: as cores mais frequentes da imagem aparecem à esquerda. Você pode criar uma paleta nova ou adicionar a uma existente.',
+    paletas: 'Dica: cada cor da paleta é totalmente editável. Use o menu "Exportar" para gerar CSS, SCSS, JSON, TXT, HTML ou uma imagem.'
+  };
+
+  function switchTab(name){
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+
+    document.getElementById('outputTitle').textContent = outputTitles[name];
+    document.getElementById('outputHint').textContent = outputHints[name];
+
+    const colorValues = document.getElementById('colorValues');
+    const gradientCode = document.getElementById('gradientCode');
+
+    if(name === 'cor'){
+      colorValues.style.display = 'flex';
+      gradientCode.style.display = 'none';
+      renderColorOutput();
+    } else if(name === 'gradiente'){
+      colorValues.style.display = 'none';
+      gradientCode.style.display = 'block';
+      renderGradientOutput();
+    } else if(name === 'imagem'){
+      colorValues.style.display = 'none';
+      gradientCode.style.display = 'none';
+      document.getElementById('previewColor').style.background = lastImageDataUrl
+        ? `center / cover no-repeat url("${lastImageDataUrl}")`
+        : 'linear-gradient(120deg, #34D399, #38BDF8, #A78BFA, #F472B6, #FB923C)';
+    } else {
+      colorValues.style.display = 'none';
+      gradientCode.style.display = 'none';
+      document.getElementById('previewColor').style.background =
+        'linear-gradient(120deg, #34D399, #38BDF8, #A78BFA, #F472B6, #FB923C)';
+    }
+  }
+  document.getElementById('tabs').addEventListener('click', e => {
+    const btn = e.target.closest('.tab');
+    if(btn) switchTab(btn.dataset.tab);
+  });
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  (async function init(){
+    await loadPalettes();
+    renderPalettes();
+    refreshPaletteSelect();
+    renderStops();
+    syncFromRgb();
+    setAlpha();
+    renderGradientOutput();
+    switchTab('cor');
+  })();
+
+})();
+</script>
+</body>
+</html>

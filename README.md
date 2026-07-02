@@ -1,6 +1,6 @@
 # 🎨 Paleta Studio
 
-Uma ferramenta web simples e prática para criar, gerenciar e exportar cores, gradientes e paletas de cores prontas para usar no **Elementor**.
+Uma ferramenta web simples e prática para criar, gerenciar e exportar cores, gradientes e paletas de cores prontas.
 
 ## 📌 O que é Paleta Studio?
 
@@ -13,6 +13,7 @@ Paleta Studio é um gerador de cores totalmente online que funciona no navegador
 
 Tudo sem instalar nada. Só abre no navegador e já funciona!
 
+Acesse na integra: https://danielmoreiradev.github.io/paleta-studio/paleta-studio.html
 ---
 
 ## 🚀 Como usar
